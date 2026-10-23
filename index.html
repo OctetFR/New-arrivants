@@ -159,8 +159,8 @@ tbody tr{cursor:pointer;transition:.15s}tbody tr:hover{background:#fdf2f8;transf
 
 <script>
 // ====== CONFIGURATION : à renseigner (Supabase > Project Settings > API) ======
-const SUPABASE_URL = "https://mpzwaldftyqpwlbhtgfn.supabase.co";
-const SUPABASE_KEY = "sb_publishable_Euu7b66sCVIG6LFpPMDTrQ_OyofjXVp"; // clé "anon public"
+const SUPABASE_URL = "";
+const SUPABASE_KEY = ""; // clé "anon public"
 // ==============================================================================
 const L={statut:["A faire","En cours","Terminé","Annulé"],affecte:["Linda","Ryan","Samuel","Sofiane"],
 entite:["Hyteck","AZS","Externe"],site:["CIG","CDG","BORIES","CAVAILLON","TARASCON","AIX","MARSEILLE","OPERA","BOUTIQUE"],
@@ -181,7 +181,8 @@ const db={
   localStorage.setItem("arrivants",JSON.stringify(JSON.parse(localStorage.getItem("arrivants")||"[]").filter(x=>x.id!==id)));
  },
  async save(r){
-  if(sb){const q=r.id?sb.from("arrivants").update(r).eq("id",r.id):sb.from("arrivants").insert(r);const {error}=await q;if(error)throw error;return}
+  if(sb){const {id,...champs}=r; // l’id est généré par la base : on ne l’envoie jamais dans le corps
+  const q=id?sb.from("arrivants").update(champs).eq("id",id):sb.from("arrivants").insert(champs);const {error}=await q;if(error)throw error;return}
   let a=JSON.parse(localStorage.getItem("arrivants")||"[]");
   if(r.id)a=a.map(x=>x.id===r.id?{...x,...r}:x);else a.push({...r,id:Date.now()});
   localStorage.setItem("arrivants",JSON.stringify(a));
