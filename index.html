@@ -105,6 +105,9 @@ tr.late td{color:#dc2626;font-weight:700}
 #ticket{flex:none;width:170px} /* champ N° Ticket compact */
 .mi{width:1.15em;height:1.15em;vertical-align:-.22em;margin-right:5px;flex:none}
 .mi.cc{display:inline-flex;align-items:center;justify-content:center;width:auto;height:1.15em;padding:0 5px;border-radius:6px;background:#f97316;color:#fff;font:800 .62em/1 "Segoe UI",system-ui,sans-serif;letter-spacing:.02em;vertical-align:.1em}
+.sub{grid-column:1/-1;background:#f0fdf4;border-radius:14px;padding:10px 12px}
+.subh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}.subh label{margin:0}
+.clr{border:0;background:#fff;color:#6b7280;border-radius:99px;padding:4px 10px;font:inherit;font-size:.75rem;font-weight:700;cursor:pointer}.clr:hover{background:#fee2e2;color:#dc2626}
 /* ===== Responsive : tablettes et téléphones ===== */
 @media (max-width:860px){
  .wrap{padding:16px 12px 50px}
@@ -180,7 +183,7 @@ tr.late td{color:#dc2626;font-weight:700}
   </table></div>
   <div class="empty" id="empty" style="display:none">Aucun arrivant trouvé 🎈</div>
 </div>
-<p style="text-align:center;color:#a78bfa;font-size:.75rem;margin-top:18px">version 14</p>
+<p style="text-align:center;color:#a78bfa;font-size:.75rem;margin-top:18px">version 15 · ordinateur + téléphone</p>
 </div>
 
 <div class="modal" id="modal"><div class="box">
@@ -214,7 +217,8 @@ tr.late td{color:#dc2626;font-weight:700}
     </section>
     <section class="sc" style="--a:#22c55e"><h3>💻 Matériel &amp; accès</h3>
       <div class="grid">
-        <div class="full"><label>Matériel</label><div class="radios" id="materiel"></div></div>
+        <div class="sub"><div class="subh"><label>💻 Ordinateur</label><button type="button" class="clr" data-clr="materiel">✕ aucun</button></div><div class="radios" id="materiel"></div></div>
+        <div class="sub"><div class="subh"><label>📱 Téléphone</label><button type="button" class="clr" data-clr="telephone">✕ aucun</button></div><div class="radios" id="telephone"></div></div>
         <label class="chk"><input type="checkbox" id="compte_ad"> Compte AD</label>
         <label class="chk"><input type="checkbox" id="licence_m365"> Licence M365</label>
       </div>
@@ -251,12 +255,12 @@ const SUPABASE_KEY = "sb_publishable_Euu7b66sCVIG6LFpPMDTrQ_OyofjXVp"; // clé "
 // ==============================================================================
 const L={statut:["A faire","En cours","Terminé","Annulé"],affecte:["Linda","Ryan","Samuel","Sofiane"],
 entite:["Hyteck","AZS","Externe"],site:["CIG","CDG","BORIES","CAVAILLON","TARASCON","AIX","MARSEILLE","OPERA","BOUTIQUE"],
-materiel:["PC","Mac","Surface","Iphone","Android","CrossCall","Juste un compte"]};
+materiel:["PC","Mac","Surface","Juste un compte"],telephone:["Iphone","Android","CrossCall"]};
 const DEF=JSON.parse(JSON.stringify(L));
-const CATS={statut:"Statuts",affecte:"Affecté à",entite:"Entités",site:"Sites",materiel:"Matériel"};
+const CATS={statut:"Statuts",affecte:"Affecté à",entite:"Entités",site:"Sites",materiel:"Ordinateur",telephone:"Téléphone"};
 const PROT={statut:["A faire","Terminé"]}; // valeurs utilisées par la logique de l’application
 let LR=[],listesErr=null;
-const F=["ticket","statut","affecte","entite","site","nom","responsable","materiel","date_arrivee","date_depart","compte_ad","licence_m365","commentaires","fait"];
+const F=["ticket","statut","affecte","entite","site","nom","responsable","materiel","telephone","date_arrivee","date_depart","compte_ad","licence_m365","commentaires","fait"];
 const B=["compte_ad","licence_m365","fait"];
 const $=id=>document.getElementById(id);
 const sb=SUPABASE_URL&&SUPABASE_KEY?supabase.createClient(SUPABASE_URL,SUPABASE_KEY):null;
@@ -306,7 +310,7 @@ async function loadListes(){
 }
 
 function fill(id,arr,first){$(id).innerHTML=(first!==undefined?`<option value="">${first}</option>`:"")+arr.map(v=>`<option>${v}</option>`).join("")}
-const R=["statut","affecte","entite","site","materiel"];
+const R=["statut","affecte","entite","site","materiel","telephone"];
 const rdHtml=(k,v)=>`<label class="rd"><input type="radio" name="${k}" value="${esc(v)}"><span>${esc(v)}</span></label>`;
 function buildLists(){ // (re)construit les listes de la saisie et des filtres à partir de la base
  const a=$("fA").value,e=$("fE").value;
@@ -350,7 +354,7 @@ function render(){
  const tn=r=>{const n=parseInt(String(r.ticket||"").replace(/\D/g,""),10);return isNaN(n)?Infinity:n}; // n° de ticket numérique, sans ticket en dernier
  v.sort((x,y)=>(x.date_arrivee||"9999").localeCompare(y.date_arrivee||"9999")||(tn(x)<tn(y)?-1:tn(x)>tn(y)?1:0)); // 1) date d’arrivée croissante, 2) n° de ticket croissant
  $("rows").innerHTML=v.map(r=>`<tr class="${r.fait?"done":""} ${late(r)?"late":""}" data-id="${r.id}">
-  <td data-label="Ticket"><b>${esc(r.ticket)}</b></td><td data-label="Arrivant" class="nm">${matIcon(r.materiel)}${esc(r.nom)}</td><td data-label="Statut"><span class="badge ${bcls(r.statut)}">${esc(r.statut)}</span></td>
+  <td data-label="Ticket"><b>${esc(r.ticket)}</b></td><td data-label="Arrivant" class="nm">${matIcon(r.materiel)}${matIcon(r.telephone)}${esc(r.nom)}</td><td data-label="Statut"><span class="badge ${bcls(r.statut)}">${esc(r.statut)}</span></td>
   <td data-label="Affecté à">${esc(r.affecte)}</td><td data-label="Entité">${esc(r.entite)}</td><td data-label="Site">${esc(r.site)}</td><td data-label="Arrivée">${fmt(r.date_arrivee)}</td>
   <td data-label="AD / M365"><span class="dot ${r.compte_ad?"on":""}" title="AD"></span><span class="dot ${r.licence_m365?"on":""}" title="M365"></span></td>
   <td data-label="Fait">${r.fait?"✅":"⏳"}</td></tr>`).join("");
@@ -427,6 +431,7 @@ async function addVal(){
  try{await dbL.add(adminCat,v);$("aNew").value="";await refreshListes()}catch(x){alert("Erreur d’ajout : "+x.message)}
 }
 $("aAdd").onclick=addVal;$("aNew").onkeydown=e=>{if(e.key==="Enter")addVal()};
+document.querySelectorAll("[data-clr]").forEach(b=>b.onclick=()=>setR(b.dataset.clr,null)); // permet de ne choisir aucun ordinateur / téléphone
 $("bNew").onclick=()=>open_(null);
 $("bX").onclick=$("bCancel").onclick=()=>$("modal").classList.remove("show");
 $("modal").onclick=e=>{if(e.target.id==="modal")$("modal").classList.remove("show")};
