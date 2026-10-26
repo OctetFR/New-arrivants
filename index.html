@@ -101,6 +101,8 @@ tr.late td{color:#dc2626;font-weight:700}
 #banner{background:#fef08a;padding:10px 14px;border-radius:14px;margin-bottom:14px;font-weight:600;display:none}
 .empty{text-align:center;padding:30px;color:#a78bfa;font-weight:700}
 
+#modal .box{max-width:1100px} /* fiche de saisie élargie */
+#ticket{flex:none;width:170px} /* champ N° Ticket compact */
 /* ===== Responsive : tablettes et téléphones ===== */
 @media (max-width:860px){
  .wrap{padding:16px 12px 50px}
@@ -132,7 +134,7 @@ tr.late td{color:#dc2626;font-weight:700}
  .sc{padding:12px}
  .grid{grid-template-columns:1fr}
  .rd{padding:10px 14px}
- .row{flex-wrap:wrap}.fs{width:100%;justify-content:center;min-height:44px}
+ .row{flex-wrap:wrap}#ticket{flex:1;width:auto}.fs{width:100%;justify-content:center;min-height:44px}
  .mf{padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
  .mf .btn{flex:1}
  .addrow{flex-wrap:wrap}.addrow .btn{width:100%}
@@ -176,7 +178,7 @@ tr.late td{color:#dc2626;font-weight:700}
   </table></div>
   <div class="empty" id="empty" style="display:none">Aucun arrivant trouvé 🎈</div>
 </div>
-<p style="text-align:center;color:#a78bfa;font-size:.75rem;margin-top:18px">version 10 · période</p>
+<p style="text-align:center;color:#a78bfa;font-size:.75rem;margin-top:18px">version 12 · fiche large</p>
 </div>
 
 <div class="modal" id="modal"><div class="box">
