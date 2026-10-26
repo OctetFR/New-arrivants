@@ -178,7 +178,7 @@ tr.late td{color:#dc2626;font-weight:700}
   </table></div>
   <div class="empty" id="empty" style="display:none">Aucun arrivant trouvé 🎈</div>
 </div>
-<p style="text-align:center;color:#a78bfa;font-size:.75rem;margin-top:18px">version 12 · fiche large</p>
+<p style="text-align:center;color:#a78bfa;font-size:.75rem;margin-top:18px">version 13 · rouge sauf terminé</p>
 </div>
 
 <div class="modal" id="modal"><div class="box">
@@ -324,7 +324,7 @@ const fmt=d=>d?new Date(d+"T00:00").toLocaleDateString("fr-FR"):"–";
 function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 const bcls=s=>s==="Terminé"?"b-T":s==="En cours"?"b-E":s==="Annulé"?"b-N":"b-A";
 
-const late=r=>r.date_arrivee&&r.date_arrivee<new Date().toLocaleDateString("sv-SE"); // date d’arrivée antérieure à aujourd’hui, quel que soit le statut
+const late=r=>r.date_arrivee&&r.date_arrivee<new Date().toLocaleDateString("sv-SE")&&r.statut!=="Terminé"; // rouge : date d’arrivée passée ET statut différent de Terminé
 const norm=t=>String(t??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase(); // ignore accents et majuscules
 function render(){
  const q=norm($("fQ").value.trim()),s=$("fS").checked&&!q, // recherche active : on affiche tous les statuts
