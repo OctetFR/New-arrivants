@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{if(localStorage.getItem("theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
 <title>Nouveaux Arrivants - Onboarding</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
@@ -147,13 +148,52 @@ tr.late td{color:#dc2626;font-weight:700}
  .addrow{flex-wrap:wrap}.addrow .btn{width:100%}
 }
 @media (max-width:380px){.fgrid{grid-template-columns:1fr}}
+
+/* ===== Mode sombre ===== */
+html[data-theme=dark]{color-scheme:dark;--ink:#e5e7eb}
+html[data-theme=dark] body{background:linear-gradient(135deg,#0b1020,#1a1740 50%,#2a1233);background-attachment:fixed}
+html[data-theme=dark] .btn.sec{background:#232a4d;color:#c4b5fd;box-shadow:none}
+html[data-theme=dark] .card{background:#141937f2}
+html[data-theme=dark] th{background:#232a4d;color:#cbd5e1}
+html[data-theme=dark] td{border-bottom-color:#2a3055}
+html[data-theme=dark] tbody tr:hover{background:#1d2347}
+html[data-theme=dark] tr.late td{color:#f87171}
+html[data-theme=dark] .dot{background:#3b3f73}
+html[data-theme=dark] .dot.on{background:var(--g)}
+html[data-theme=dark] input:not([type=checkbox]):not([type=radio]),html[data-theme=dark] select,html[data-theme=dark] textarea{background:#0f1330;border-color:#3b3f73;color:#e5e7eb}
+html[data-theme=dark] .fgrid{background:linear-gradient(135deg,#1b1f3f,#251a3a)}
+html[data-theme=dark] .fgrid label{color:#a78bfa}
+html[data-theme=dark] .sw{background:#232a4d}
+html[data-theme=dark] #cnt{background:#2a2f5e;color:#c4b5fd}
+html[data-theme=dark] .box{background:#151a36}
+html[data-theme=dark] .mb{background:#0f1330}
+html[data-theme=dark] .sc{background:#1a1f3f;box-shadow:none}
+html[data-theme=dark] .sc label:not(.rd):not(.chk){color:#9ca3af}
+html[data-theme=dark] .rd:not(:has(input:checked)){background:#252b55;color:#e5e7eb}
+html[data-theme=dark] .rd:not(:has(input:checked)):hover{background:#2f2a5c}
+html[data-theme=dark] .chk,html[data-theme=dark] .box .chk{background:#232a4d;box-shadow:none}
+html[data-theme=dark] .box .chk.big{background:linear-gradient(135deg,#123a2c,#0e3440)}
+html[data-theme=dark] .sub{background:#12261f}
+html[data-theme=dark] .clr{background:#1a1f3f;color:#9ca3af}
+html[data-theme=dark] .mf{background:#151a36f2;border-top-color:#3b3f73}
+html[data-theme=dark] .val{background:#1a1f3f;border-color:#3b3f73}
+html[data-theme=dark] .tab{background:#252b55;color:#c4b5fd}
+html[data-theme=dark] .tab.on{background:linear-gradient(135deg,var(--p),var(--k));color:#fff}
+html[data-theme=dark] #aMsg{color:#9ca3af}
+html[data-theme=dark] svg.mi[fill="#111827"]{fill:#e5e7eb}
+html[data-theme=dark] svg.mi rect[fill="#111827"]{fill:#94a3b8}
+html[data-theme=dark] svg.mi rect[fill="#e5e7eb"]{fill:#1f2937}
+html[data-theme=dark] svg.mi rect[stroke="#475569"]{stroke:#cbd5e1}
+html[data-theme=dark] svg.mi path[fill="#475569"]{fill:#cbd5e1}
+@media (max-width:860px){html[data-theme=dark] tbody tr{background:#1a1f3f;border-color:#2f3566;border-left-color:var(--k)}}
+@media (max-width:600px){header>div .sw{flex:1 1 100%;justify-content:center}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
   <h1>Nouveaux Arrivants - Onboarding</h1>
-  <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn sec" id="bNew">➕ Créer</button><button class="btn sec" id="bAdmin">⚙️ Admin</button></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn sec" id="bNew">➕ Créer</button><button class="btn sec" id="bAdmin">⚙️ Admin</button><label class="sw" id="themeLbl"><input type="checkbox" id="themeSw"> 🌙 Mode sombre</label></div>
 </header>
 <div id="banner">⚠️ Mode démo : données stockées uniquement dans ce navigateur. Renseignez SUPABASE_URL et SUPABASE_KEY dans index.html pour partager les données.</div>
 <div class="stats">
@@ -185,7 +225,7 @@ tr.late td{color:#dc2626;font-weight:700}
   </table></div>
   <div class="empty" id="empty" style="display:none">Aucun arrivant trouvé 🎈</div>
 </div>
-<p style="text-align:center;color:#a78bfa;font-size:.75rem;margin-top:18px">version 19 · pastille commentaire</p>
+<p style="text-align:center;color:#a78bfa;font-size:.75rem;margin-top:18px">version 20 · mode sombre</p>
 </div>
 
 <div class="modal" id="modal"><div class="box">
@@ -435,6 +475,8 @@ async function addVal(){
 }
 $("aAdd").onclick=addVal;$("aNew").onkeydown=e=>{if(e.key==="Enter")addVal()};
 document.querySelectorAll("[data-clr]").forEach(b=>b.onclick=()=>setR(b.dataset.clr,null)); // permet de ne choisir aucun ordinateur / téléphone
+$("themeSw").checked=document.documentElement.getAttribute("data-theme")==="dark";
+$("themeSw").onchange=()=>{const d=$("themeSw").checked;document.documentElement.setAttribute("data-theme",d?"dark":"light");try{localStorage.setItem("theme",d?"dark":"light")}catch(e){}}; // thème mémorisé
 $("bNew").onclick=()=>open_(null);
 $("bX").onclick=$("bCancel").onclick=()=>$("modal").classList.remove("show");
 $("modal").onclick=e=>{if(e.target.id==="modal")$("modal").classList.remove("show")};
