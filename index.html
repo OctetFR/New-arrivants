@@ -113,6 +113,8 @@ tr.late td{color:#dc2626;font-weight:700}
 .cm{margin-left:6px;white-space:nowrap}.cm .mi{margin-right:0;cursor:help}
 .fgrid>div,.grid>div{min-width:0}
 input[type=date]{min-width:0;max-width:100%}
+.ext{margin-left:3px;padding:1px 4px;border-radius:4px;background:#ffedd5;color:#c2410c;font-size:.55em;font-weight:800;letter-spacing:.03em;vertical-align:super;line-height:1}
+html[data-theme=dark] .ext{background:#3a2412;color:#fdba74}
 /* ===== Responsive : tablettes et téléphones ===== */
 @media (max-width:860px){
  .wrap{padding:16px 12px 50px}
@@ -238,7 +240,7 @@ html[data-theme=dark] svg.mi path[fill="#475569"]{fill:#cbd5e1}
   </table></div>
   <div class="empty" id="empty" style="display:none">Aucun arrivant trouvé 🎈</div>
 </div>
-<p style="text-align:center;color:#a78bfa;font-size:.75rem;margin-top:18px"></p>
+<p style="text-align:center;color:#a78bfa;font-size:.75rem;margin-top:18px">version 23 · repère EXT</p>
 </div>
 
 <div class="modal" id="modal"><div class="box">
@@ -410,7 +412,7 @@ function render(){
  const tn=r=>{const n=parseInt(String(r.ticket||"").replace(/\D/g,""),10);return isNaN(n)?Infinity:n}; // n° de ticket numérique, sans ticket en dernier
  v.sort((x,y)=>(x.date_arrivee||"9999").localeCompare(y.date_arrivee||"9999")||(tn(x)<tn(y)?-1:tn(x)>tn(y)?1:0)); // 1) date d’arrivée croissante, 2) n° de ticket croissant
  $("rows").innerHTML=v.map(r=>`<tr class="${r.fait?"done":""} ${late(r)?"late":""}" data-id="${r.id}">
-  <td data-label="Ticket"><b>${esc(r.ticket)}</b></td><td data-label="Arrivant" class="nm"><span class="ics">${matIcon(r.materiel)}${matIcon(r.telephone)}</span>${esc(r.nom)}${cmtIcon(r)}</td><td data-label="Statut"><span class="badge ${bcls(r.statut)}">${esc(r.statut)}</span></td>
+  <td data-label="Ticket"><b>${esc(r.ticket)}</b></td><td data-label="Arrivant" class="nm"><span class="ics">${matIcon(r.materiel)}${matIcon(r.telephone)}</span>${esc(r.nom)}${norm(r.entite)==="externe"?'<sup class="ext" title="Externe">EXT</sup>':""}${cmtIcon(r)}</td><td data-label="Statut"><span class="badge ${bcls(r.statut)}">${esc(r.statut)}</span></td>
   <td data-label="Affecté à">${esc(r.affecte)}</td><td data-label="Entité">${esc(r.entite)}</td><td data-label="Site">${esc(r.site)}</td><td data-label="Arrivée">${fmt(r.date_arrivee)}</td>
   <td data-label="AD / M365"><span class="dot ${r.compte_ad?"on":""}" title="AD"></span><span class="dot ${r.licence_m365?"on":""}" title="M365"></span></td>
   <td data-label="Fait">${r.fait?"✅":"⏳"}</td></tr>`).join("");
